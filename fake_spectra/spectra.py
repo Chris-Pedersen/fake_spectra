@@ -286,8 +286,11 @@ class Spectra(object):
         grp.attrs["omegal"]=self.OmegaLambda
         grp.attrs["discarded"]=self.discarded
         grp.attrs["npart"]=self.npart
-        grp.attrs["T0"]=self.T0
-        grp.attrs["gamma"]=self.gamma
+        try:
+            grp.attrs["T0"]=self.T0
+            grp.attrs["gamma"]=self.gamma
+        except:
+            print("No temperature data to save")
         grp = f.create_group("spectra")
         grp["cofm"]=self.cofm
         grp["axis"]=self.axis
