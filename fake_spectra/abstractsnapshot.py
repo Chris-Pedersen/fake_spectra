@@ -306,6 +306,13 @@ class BigFileSnapshot(AbstractSnapshot):
                     meanDens=self.get_omega_baryon()*27.75e-9
                     ie*=(dens/meanDens)**(self.gammascale-1)
                 return ie
+            ## Hack to compensate for missing units in bigfiles
+            ## see https://github.com/MP-Gadget/MP-Gadget/issues/295
+            elif blockname=="Velocity":
+                (start, end) = self._segment_to_partlist(part_type = part_type, segment=segment)
+                velocities=np.array(self._f_handle[str(part_type)+"/"+blockname][start:end])
+                velocities*=(self.get_header_attr("Time"))**(-3./2.) # rescale by a^{-3/2}
+                return velocities
             else:
                 (start, end) = self._segment_to_partlist(part_type = part_type, segment=segment)
                 return self._f_handle[str(part_type)+"/"+blockname][start:end]
